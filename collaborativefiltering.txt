@@ -1,0 +1,65 @@
+val userId = "10944"
+val windowId = "6"
+val jobWindows = sc.textFile("/project/jobs/jobs"+windowId+".tsv")
+val sim = sc.textFile("/project/usercollab/indicator-matrix/part-00000")
+val result = sim.filter(line => line.split("\t")(0).equals(userId)).map(line =>line.split("\t")(1))
+val resarray = result.collect()
+val resarray1 = resarray(0).split(",")
+val apps = sc.textFile("/project/apps.tsv")
+val jobs_user = apps.filter(line => line.split("\t")(0).equals(userId)).map(line => line.split("\t")(4))
+val set_jobs_user = jobs_user.collect().toSet
+val job_list = jobs_user.collect()
+************************************** USER BASED RECOMMENDATION *************************************************
+
+var other_jobs_user = scala.collection.mutable.SortedSet[java.lang.String]()
+for (i <- 0 until resarray1.length)
+{
+val x1 = apps.filter(line => line.split("\t")(0).equals(resarray1(i).split(":")(0))).map(line => line.split("\t")(4))
+val y = x1.collect()
+for(j <- 0 until y.length)
+{
+other_jobs_user += y(j)
+}
+}
+
+other_jobs_user
+*********************************************************************************************************************
+************************************** JOB BASED RECOMMENDATION  ****************************************************
+val job_sim = sc.textFile("/project/jobcollab/indicator-matrix/part-00000")
+var set_job = scala.collection.mutable.SortedSet[java.lang.String]()
+
+for (i <- 0 until job_list.length)
+{
+val job_result = job_sim.filter(line => line.split("\t")(0).equals(job_list(i))).map(line =>line.split("\t")(1))
+val job_result_col = job_result.collect()
+val jobs_split = job_result_col(0).split(",")
+for (j <-0 until jobs_split.length )
+    { 
+    set_job += jobs_split(j).split(":")(0)
+    }
+}
+
+set_job
+
+var total_jobs = other_jobs_user.union(set_job)
+
+val diff_set_jobs_user = total_jobs.diff(set_jobs_user)
+
+diff_set_jobs_user
+************************************* ANALYSIS OF THE ALGORITHM **************************************************
+val result_jobs = sc.textFile("/project/popular_jobs.csv")
+var results_jobs_user = scala.collection.mutable.SortedSet[java.lang.String]()
+
+val result_job_list = result_jobs.filter(line => line.split(",")(0).equals(userId)).map(line => line.split(",")(1))
+
+val result_job_set = result_job_list.collect()(0).split(" ").toSet
+
+//calculate for overall accuracy 
+
+val overall_accuracy = ((result_job_set.intersect(total_jobs).size)*100).toFloat/result_job_set.size
+
+//calculate for job based
+val job_collab_accuracy = ((result_job_set.intersect(set_job).size)*100).toFloat/result_job_set.size
+
+//calculate for user based
+val user_collab_accuracy = ((result_job_set.intersect(other_jobs_user).size)*100).toFloat/result_job_set.size

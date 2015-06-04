@@ -1,0 +1,28 @@
+Dataset Description
+
+*******************************************************************************************
+As the datasets are too huge I have provided the description and links below from which the datasets can be downloaded.
+*******************************************************************************************
+
+The Link:
+
+https://www.kaggle.com/c/job-recommendation/data
+
+*******************************************************************************************
+The Files:
+
+window_dates.tsv contains information about the timing of each window. Each row corresponds to a window, and has the date and time that the training period begins, that the training period ends, and that the test period ends.
+
+users.tsv contains information about the users. Each row of this file describes a user. The UserID column contains a user's unique id number, the WindowID column contains which of the 7 windows the user is assigned to, and the Split column tells whether the user is in the Train group or the Test group. The remaining columns contain demographic and professional information about the users.
+
+test_users.tsv contains a list of the Test UserIDs and windows, for your convenience. All of the information in this file can be found in users.tsv.
+
+user_history.tsv contains information about a user's work history. Each row of this file describes a job that a user held. The UserID, WindowID, and Split columns have the same meaning as before. The JobTitle column represents the title of the job, and the Sequence column represents the order in which the user held that job, with smaller numbers indicating more recent jobs.
+
+jobs.tsv contains information about job postings. Each row of this file describes a job post. The JobID column contains the job posting's unique id number, and the WindowID column contains which of the 7 windows the job was assigned to. The other columns contain information about the job posting. Two of these columns deserve special attention, the StartDate and EndDate columns. These columns indicate the period in which this job posting was visible on careerbuilder.com. Each job was visible for part of its 13-day window, but not necessarily for the entire 13 days. Users can only apply to a job between its StartDate and EndDate, so don't predict that a user applied for a job if the job was not visible for at least part of the 4-day Test period.
+
+splitjobs.zip is a directory containing jobs1.tsv, jobs2.tsv, ... , jobs7.tsv, each of which contain all jobs in a given window. Thus, for example, jobs3.tsv contains all jobs in Window 3. This directory contains the exact same information as jobs.tsv, in the same format, and is provided merely for your convenience.
+
+apps.tsv contains information about applications made by users to jobs. Each row describes an application. The UserID, WindowID, Split, and JobID columns have the same meanings as above, and the ApplicationDate column indicates the date and time at which UserID applied to JobId.
+
+popular_jobs.csv is the benchmark submission file produced by popular_jobs.p

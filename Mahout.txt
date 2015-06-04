@@ -1,0 +1,4 @@
+mahout spark-itemsimilarity --input /project/apps.tsv -id "/t" --output /project/jobcollab -rc 0 -ic 4 -td ","
+
+
+mahout spark-itemsimilarity --input /project/apps.tsv -id "/t" --output /project/usercollab -rc 4 -ic 0 -td ","
